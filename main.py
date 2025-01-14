@@ -5,7 +5,8 @@ from Network_Security.exception.exception import NetworkSecurityException
 from Network_Security.logging.logger import logging
 from Network_Security.entity.corfig_entity import DataIngestionConfig, DataValidationConfig, DataTransformationConfig
 from Network_Security.entity.corfig_entity import TrainingPipelineConfig
-
+from Network_Security.components.model_trainer import ModelTrainer
+from Network_Security.entity.corfig_entity import ModelTrainerConfig
 
 import sys
 
@@ -31,8 +32,15 @@ if __name__ == '__main__':
         logging.info("data Transformation started")
         data_transformation=DataTransformation(data_validation_artifact,data_transformation_config)
         data_transformation_artifact=data_transformation.initiate_data_transformation()
-        print(data_transformation_artifact)
+        #print(data_transformation_artifact)
         logging.info("data Transformation completed")
+
+        logging.info("Model Training stared")
+        model_trainer_config=ModelTrainerConfig(trainingpipelineconfig)
+        model_trainer=ModelTrainer(model_trainer_config=model_trainer_config,data_transformation_artifact=data_transformation_artifact)
+        model_trainer_artifact=model_trainer.initiate_model_trainer()
+
+        logging.info("Model Training artifact created")
         
         
     except Exception as e:
