@@ -1,4 +1,11 @@
 # Network Security - ML Model Pipeline
+
+## Table of Contents
+1. [Motivation](#motivation)
+2. [Project Description](#project-description)
+3. [Pipeline Stages](#pipeline-stages)
+4. [Tech Stack](#tech-stack)
+5. [Screenshots](#screenshots)
 ---
 ## Motivation
 With the increasing prevalence of cyber frauds and threats, user privacy has become more essential than ever. Hackers often attempt to gain sensitive information through phishing attacks. This project aims to protect users from such threats by identifying phishing websites. It can easily be integrated as a tool in larger applications or used for surveillance purposes by enterprises or individual users.
@@ -8,8 +15,8 @@ This repository contains a machine learning pipeline for classifying network dat
 
 The project involves building and deploying a machine learning model to classify network data. The pipeline ensures automated data handling, model training, and prediction, all while maintaining version control and model management.
 
-### **Pipeline Stages:**
-1. **Data Ingestion**: Extracts data from CSV files and stores them in MongoDB.
+## Pipeline Stages
+1. **Data Ingestion**: Extracts data MongoDB and loads it as pandas dataframe.
 2. **Data Validation**: Validates the data for any inconsistencies, missing values, or anomalies.
 3. **Data Transformation**: Transforms the data into a format suitable for training.
 4. **Model Training**: Trains machine learning models using the processed data.
@@ -27,4 +34,6 @@ The project involves building and deploying a machine learning model to classify
 - **MongoDB**: Used to store network data for training the models.
 - **Docker**: Containerizes the application for easy deployment and consistent environments.
 - **GitHub Actions**: Automates CI/CD pipeline to test, build, and deploy the project.
-- **scikit-learn**: For building and evaluating machine learning models.  
+- **scikit-learn**: For building and evaluating machine learning models.
+
+## Screenshots
