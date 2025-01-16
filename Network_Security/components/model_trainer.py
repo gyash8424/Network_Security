@@ -16,7 +16,6 @@ from Network_Security.utils.ml_utils.metric.classification_metric import get_cla
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import r2_score
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import (
     AdaBoostClassifier,
@@ -42,21 +41,27 @@ class ModelTrainer:
             raise NetworkSecurityException(e,sys)
     
     def track_mlflow(self,best_model,classificationmetric):
+        """Tracks model metrics and logs the model to MLflow."""
         with mlflow.start_run():
             f1_score=classificationmetric.f1_score
             precision_score=classificationmetric.precision_score
             recall_score=classificationmetric.recall_score
 
             
-
             mlflow.log_metric("f1_score",f1_score)
             mlflow.log_metric("precision",precision_score)
             mlflow.log_metric("recall_score",recall_score)
+
             mlflow.sklearn.log_model(best_model,"model")
 
 
     
     def train_model(self,X_train,y_train,x_test,y_test):
+        """
+        Trains multiple machine learning models and selects the best performing model.
+        
+        Returns model_trainer_artifact: Artifact containing the trained model and metrics.
+        """
         models = {
                 "Random Forest": RandomForestClassifier(verbose=1),
                 "Decision Tree": DecisionTreeClassifier(),
@@ -99,7 +104,6 @@ class ModelTrainer:
         best_model_score = max(sorted(model_report.values()))
 
         ## To get best model name from dict
-
         best_model_name = list(model_report.keys())[
             list(model_report.values()).index(best_model_score)
         ]
@@ -115,20 +119,23 @@ class ModelTrainer:
         y_test_pred=best_model.predict(x_test)
         classification_test_metric=get_classification_score(y_true=y_test,y_pred=y_test_pred)
 
+        # Track experiment metrics in MLflow for testing
         self.track_mlflow(best_model,classification_test_metric)
 
+        # Load the preprocessor object from the transformation artifact
         preprocessor = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
             
         model_dir_path = os.path.dirname(self.model_trainer_config.trained_model_file_path)
         os.makedirs(model_dir_path,exist_ok=True)
 
+        # Wrap preprocessor and model into a NetworkModel object which combines a preprocessor and a trained machine learning model. 
         Network_Model=NetworkModel(preprocessor=preprocessor,model=best_model)
         save_object(self.model_trainer_config.trained_model_file_path,obj=Network_Model)
         #model pusher
         save_object("final_model/model.pkl",best_model)
         
 
-        ## Model Trainer Artifact
+        # Prepare the ModelTrainerArtifact with the model path and metrics
         model_trainer_artifact=ModelTrainerArtifact(
             trained_model_file_path=self.model_trainer_config.trained_model_file_path,
             train_metric_artifact=classification_train_metric,
@@ -138,6 +145,10 @@ class ModelTrainer:
         return model_trainer_artifact
  
     def initiate_model_trainer(self)->ModelTrainerArtifact:
+        """
+        Initiates the model training process by loading transformed data and calling the train_model function
+        And returns model_trainer_artifact: Artifact containing the trained model and metrics.
+        """
         try:
             train_file_path = self.data_transformation_artifact.transformed_train_file_path
             test_file_path = self.data_transformation_artifact.transformed_test_file_path

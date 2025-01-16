@@ -31,12 +31,20 @@ import sys
 
 
 class TrainingPipeline:
+    """
+    The TrainingPipeline class orchestrates the end-to-end process of training a machine learning model,
+    including data ingestion, validation, transformation, model training, and syncing artifacts to S3.
+    """
     def __init__(self):
         self.training_pipeline_config=TrainingPipelineConfig()
         self.s3_sync = S3Sync()
         
 
     def start_data_ingestion(self):
+        """
+        Initiates the data ingestion process, which fetches and prepares the data for further processing.
+        Returns a DataIngestionArtifact containing details of the ingested data.
+        """
         try:
             self.data_ingestion_config=DataIngestionConfig(
                 training_pipeline_config=self.training_pipeline_config
@@ -53,6 +61,10 @@ class TrainingPipeline:
             raise NetworkSecurityException(e,sys)
         
     def start_data_validation(self,data_ingestion_artifact:DataIngestionArtifact):
+        """
+        Validates the ingested data to ensure it meets quality and format requirements.
+        Returns a DataValidationArtifact containing validation results.
+        """
         try:
             data_validation_config=DataValidationConfig(
                 training_pipeline_config=self.training_pipeline_config
@@ -68,6 +80,10 @@ class TrainingPipeline:
             raise NetworkSecurityException(e,sys)
         
     def start_data_transformation(self,data_validation_artifact:DataValidationArtifact):
+        """
+        Transforms the validated data into a format suitable for model training.
+        Returns a DataTransformationArtifact containing transformed data details.
+        """
         try:
             data_transformation_config = DataTransformationConfig(
                 training_pipeline_config=self.training_pipeline_config
@@ -83,6 +99,10 @@ class TrainingPipeline:
             raise NetworkSecurityException(e,sys)
         
     def start_model_trainer(self,data_transformation_artifact:DataTransformationArtifact)->ModelTrainerArtifact:
+        """
+        Trains a machine learning model using the transformed data.
+        Returns a ModelTrainerArtifact containing details of the trained model.
+        """
         try:
             self.model_trainer_config: ModelTrainerConfig = ModelTrainerConfig(
                 training_pipeline_config=self.training_pipeline_config
@@ -126,12 +146,21 @@ class TrainingPipeline:
     
     
     def run_pipeline(self):
+        """
+        Executes the entire training pipeline, including data ingestion, validation, transformation,
+        model training, and syncing artifacts and models to S3.
+        """
         try:
+            # Start data ingestion
             data_ingestion_artifact=self.start_data_ingestion()
+            # Perform data validation
             data_validation_artifact=self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+            # Transform the data
             data_transformation_artifact=self.start_data_transformation(data_validation_artifact=data_validation_artifact)
+            # Train the model
             model_trainer_artifact=self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
             
+            # Sync local artifacts and models to S3
             self.sync_artifact_dir_to_s3()
             self.sync_saved_model_dir_to_s3()
             

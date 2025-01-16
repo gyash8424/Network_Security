@@ -1,3 +1,4 @@
+# This file defines the schema for the dataset, including column names, data types, and categorization of columns.
 columns:
   - having_IP_Address: int64
   - URL_Length: int64
@@ -33,6 +34,7 @@ columns:
 
 
 numerical_columns:
+# List of numerical columns used for analysis or processing.
   - having_IP_Address
   - URL_Length
   - Shortining_Service

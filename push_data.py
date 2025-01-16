@@ -15,8 +15,11 @@ load_dotenv()
 MONGO_DB_URL = os.getenv("MONGO_DB_URL")
 #print(MONGO_DB_URL)
 
+
+# Use certifi for a secure connection to MongoDB
 ca = certifi.where()
 
+# Class to handle extraction of network data, such as reading CSV and inserting it to MongoDB
 class NetworkDataExtract():
     def __init__(self):
         try:
@@ -28,6 +31,7 @@ class NetworkDataExtract():
         try:
             data = pd.read_csv(file_path)
             data.reset_index(drop=True, inplace=True)
+            # Convert the DataFrame to JSON format and return as a list of records
             records= list(json.loads(data.T.to_json()).values())
             return records
         except Exception as e:

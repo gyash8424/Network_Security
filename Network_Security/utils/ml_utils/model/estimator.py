@@ -7,7 +7,15 @@ from Network_Security.exception.exception import NetworkSecurityException
 from Network_Security.logging.logger import logging
 
 class NetworkModel:
+    """
+    A wrapper class for combining a preprocessor and a trained machine learning model. 
+    This class allows seamless integration of preprocessing and prediction steps.
+    """
     def __init__(self,preprocessor,model):
+        """
+        - preprocessor: A preprocessing object (e.g., Scikit-learn pipeline) that transforms input data.
+        - model: A trained machine learning model (e.g., RandomForestClassifier, LogisticRegression).
+        """
         try:
             self.preprocessor = preprocessor
             self.model = model

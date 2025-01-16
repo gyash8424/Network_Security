@@ -1,3 +1,5 @@
+# This module handles the ingestion of data from MongoDB, its transformation, and preparation for training and testing.
+
 from Network_Security.exception.exception import NetworkSecurityException
 from Network_Security.logging.logger import logging
 
@@ -13,18 +15,29 @@ from typing import List
 from sklearn.model_selection import train_test_split
 
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv()# Load environment variables from a .env file.
+
+# Retrieve MongoDB URL from environment variables.
 
 MONGO_DB_URL = os.getenv("MONGO_DB_URL")
 
 class DataIngestion:
     def __init__(self, data_ingestion_config:DataIngestionConfig):
+        """
+        Initializes the DataIngestion class with configuration details.
+        """
         try:
             self.data_ingestion_config=data_ingestion_config
         except Exception as e:
             raise NetworkSecurityException(e,sys)
     
     def export_collection_as_dataframe(self):
+        """
+        Exports a MongoDB collection as a Pandas DataFrame.
+
+        Returns:
+        pd.DataFrame: DataFrame containing the exported data.
+        """
         try:
             database_name = self.data_ingestion_config.database_name
             collection_name = self.data_ingestion_config.collection_name
@@ -42,6 +55,7 @@ class DataIngestion:
             raise NetworkSecurityException(e,sys)
 
     def export_data_into_feature_store(self,dataframe: pd.DataFrame):
+        " Stores the DataFrame in the feature store as a CSV file. "
         try:
             feature_store_file_path=self.data_ingestion_config.feature_store_file_path
 
@@ -55,6 +69,7 @@ class DataIngestion:
             raise NetworkSecurityException(e,sys)
         
     def split_data_as_train_test(self,dataframe: pd.DataFrame):
+        "Splits the DataFrame into training and testing datasets."
         try:
             train_set, test_set = train_test_split(
                 dataframe, test_size=self.data_ingestion_config.train_test_split_ratio
@@ -87,6 +102,15 @@ class DataIngestion:
            
 
     def initiate_data_ingestion(self):
+        """
+        Initiates the data ingestion process, including:
+        - Exporting data from MongoDB.
+        - Storing data in the feature store.
+        - Splitting the data into training and testing datasets.
+
+        Returns:
+        DataIngestionArtifact: An artifact containing paths to the training and testing datasets.
+        """
         try:
             dataframe = self.export_collection_as_dataframe()
             dataframe = self.export_data_into_feature_store(dataframe)

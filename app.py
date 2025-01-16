@@ -1,13 +1,5 @@
 import sys
 import os
-
-import certifi
-ca = certifi.where()
-
-from dotenv import load_dotenv
-load_dotenv()
-mongo_db_url = os.getenv("MONGO_DB_URL")
-print(mongo_db_url)
 import pymongo
 from Network_Security.exception.exception import NetworkSecurityException
 from Network_Security.logging.logger import logging
@@ -24,11 +16,22 @@ from Network_Security.utils.main_utils.utils import load_object
 
 from Network_Security.utils.ml_utils.model.estimator import NetworkModel
 
-
-client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
-
 from Network_Security.constants.training_pipeline import DATA_INGESTION_COLLECTION_NAME
 from Network_Security.constants.training_pipeline import DATA_INGESTION_DATABASE_NAME
+
+# Load SSL certificates for MongoDB connection
+import certifi
+ca = certifi.where()
+
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+mongo_db_url = os.getenv("MONGO_DB_URL")
+print(mongo_db_url)
+
+# Initialize MongoDB client
+client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
+
 
 database = client[DATA_INGESTION_DATABASE_NAME]
 collection = database[DATA_INGESTION_COLLECTION_NAME]

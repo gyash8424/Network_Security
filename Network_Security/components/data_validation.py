@@ -4,14 +4,24 @@ from Network_Security.exception.exception import NetworkSecurityException
 from Network_Security.logging.logger import logging
 from Network_Security.constants.training_pipeline import SCHEMA_FILE_PATH
 from Network_Security.utils.main_utils.utils import read_yaml_file, write_yaml_file
-from scipy.stats import ks_2samp
+from scipy.stats import ks_2samp # KS test to detect drift
 import pandas as pd
 import os,sys
 
 
 class DataValidation:
+    """
+    Class for validating the quality of the data, including:
+    - Ensuring the number of columns match the expected schema.
+    - Detecting dataset drift using statistical tests.
+    """
     def __init__(self, data_ingestion_artifact: DataIngestionArtifact,
                  data_validation_config: DataValidationConfig):
+        """ 
+        Args:
+            data_ingestion_artifact (DataIngestionArtifact): Contains paths to the ingested data.
+            data_validation_config (DataValidationConfig): Configuration for data validation.
+        """
         try:
             self.data_ingestion_artifact=data_ingestion_artifact
             self.data_validation_config=data_validation_config
@@ -27,6 +37,13 @@ class DataValidation:
             raise NetworkSecurityException(e,sys)
     
     def validate_number_of_columns(self, dataframe:pd.DataFrame)-> bool:
+        """
+        Validates if the DataFrame has the correct number of columns based on the schema configuration.
+        Args:
+            dataframe (pd.DataFrame): The DataFrame to validate.
+        Returns:
+            bool: True if the column count matches the schema, otherwise False.
+        """
         try:
             number_of_columns = len(self._schema_config)
             logging.info(f"Required number of columns:{number_of_columns}")
@@ -37,6 +54,11 @@ class DataValidation:
             raise NetworkSecurityException(e,sys)
         
     def detect_dataset_drift(self,base_df,current_df,threshold=0.05)->bool:
+        """
+        Detects if there is a drift in the dataset by comparing the statistical distribution of columns
+        between the base and current dataset using the KS test.
+        Returns True if no drift is detected, False if drift is found.
+        """
         try:
             status=True
             report={}
@@ -66,6 +88,13 @@ class DataValidation:
             raise NetworkSecurityException(e,sys)
     
     def initiate_data_validation(self)-> DataValidationArtifact:
+        """
+        Initiates the data validation process by:
+        - Validating the column count.
+        - Detecting dataset drift.
+        - Saving valid train and test data.
+        Returns paths to validated data and drift report.
+        """
         try:
             train_file_path = self.data_ingestion_artifact.trained_file_path
             test_file_path  =self.data_ingestion_artifact.test_file_path

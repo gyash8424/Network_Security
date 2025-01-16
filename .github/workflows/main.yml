@@ -1,3 +1,7 @@
+# This GitHub Actions workflow automates CI/CD for the project.
+# It performs continuous integration (linting and unit testing),
+# builds and pushes a Docker image to Amazon ECR, and deploys the image.
+
 name: workflow
 
 on:

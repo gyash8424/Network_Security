@@ -9,6 +9,7 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
 
 
+# Function to read a YAML file and return its contents as a dictionary
 def read_yaml_file(file_path:str)->dict:
     try:
         with open(file_path,'rb') as yaml_file:
@@ -16,6 +17,7 @@ def read_yaml_file(file_path:str)->dict:
     except Exception as e:
         raise NetworkSecurityException(e,sys)
     
+# Function to write data to a YAML file
 def write_yaml_file(file_path:str, content: object, replace:bool =False)-> None:
     try:
         if replace:
@@ -27,6 +29,7 @@ def write_yaml_file(file_path:str, content: object, replace:bool =False)-> None:
     except Exception as e:
         raise NetworkSecurityException(e,sys)
 
+# Function to save a NumPy array to a file  
 def save_numpy_array_data(file_path: str, array: np.array):
     """
     Save numpy array data to file
@@ -41,6 +44,7 @@ def save_numpy_array_data(file_path: str, array: np.array):
     except Exception as e:
         raise NetworkSecurityException(e, sys) from e
     
+# Function to save an object using pickle
 def save_object(file_path: str, obj: object) -> None:
     try:
         logging.info("Entered the save_object method of MainUtils class")
@@ -51,6 +55,7 @@ def save_object(file_path: str, obj: object) -> None:
     except Exception as e:
         raise NetworkSecurityException(e, sys) from e
 
+# Function to load a pickled object from a file
 def load_object(file_path: str, ) -> object:
     try:
         if not os.path.exists(file_path):
@@ -61,42 +66,39 @@ def load_object(file_path: str, ) -> object:
     except Exception as e:
         raise NetworkSecurityException(e, sys) from e
     
+# Function to load a NumPy array from a file
 def load_numpy_array_data(file_path: str) -> np.array:
-    """
-    load numpy array data from file
-    file_path: str location of file to load
-    return: np.array data loaded
-    """
     try:
         with open(file_path, "rb") as file_obj:
             return np.load(file_obj)
     except Exception as e:
         raise NetworkSecurityException(e, sys) from e
 
+# Function to evaluate multiple models using GridSearchCV and R^2 score
 def evaluate_models(X_train, y_train,X_test,y_test,models,param):
     try:
         report = {}
 
+        # Iterate over each model and its hyperparameters
         for i in range(len(list(models))):
-            model = list(models.values())[i]
-            para=param[list(models.keys())[i]]
+            model = list(models.values())[i]    # Retrieve the model instance
+            para=param[list(models.keys())[i]]  # Retrieve hyperparameters for the model
 
             gs = GridSearchCV(model,para,cv=3)
             gs.fit(X_train,y_train)
 
+            # Update the model with the best parameters found by GridSearchCV
             model.set_params(**gs.best_params_)
             model.fit(X_train,y_train)
 
-            #model.fit(X_train, y_train)  # Train model
-
+            # Predict on training and testing datasets
             y_train_pred = model.predict(X_train)
-
             y_test_pred = model.predict(X_test)
 
-            train_model_score = r2_score(y_train, y_train_pred)
-
+            # Calculate R^2 scores for testing datasets
             test_model_score = r2_score(y_test, y_test_pred)
-
+            
+            # Store the test R^2 score in the report
             report[list(models.keys())[i]] = test_model_score
 
         return report
