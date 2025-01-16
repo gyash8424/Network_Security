@@ -27,7 +27,7 @@ The project involves building and deploying a machine learning model to classify
 ## Tech Stack
 
 - **Python**: The primary programming language for data processing, model training, and API development.
-- **FastAPI**: For building the RESTful API for handling data ingestion and predictions.
+- **FastAPI**: For building the RESTful API for model training and predictions.
 - **MLflow**: For model tracking, versioning, and managing machine learning experiments.
 - **DagsHub**: For version control and managing machine learning experiments and for hosting MLflow remotely.
 - **AWS**: For storing models and artifacts in S3 container, docker image in ECR and running the application on EC2 instance.
