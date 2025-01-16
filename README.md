@@ -29,11 +29,28 @@ The project involves building and deploying a machine learning model to classify
 - **Python**: The primary programming language for data processing, model training, and API development.
 - **FastAPI**: For building the RESTful API for handling data ingestion and predictions.
 - **MLflow**: For model tracking, versioning, and managing machine learning experiments.
-- **DagsHub**: For version control and managing machine learning experiments.
-- **AWS**: For storing models and artifacts in S3.
+- **DagsHub**: For version control and managing machine learning experiments and for hosting MLflow remotely.
+- **AWS**: For storing models and artifacts in S3 container, docker image in ECR and running the application on EC2 instance.
 - **MongoDB**: Used to store network data for training the models.
 - **Docker**: Containerizes the application for easy deployment and consistent environments.
 - **GitHub Actions**: Automates CI/CD pipeline to test, build, and deploy the project.
 - **scikit-learn**: For building and evaluating machine learning models.
 
 ## Screenshots
+
+### Dev Phase
+![Dev Phase](https://github.com/user-attachments/assets/ad4c5755-0c6f-43a9-95c7-7ac11905d99e)
+### Testing Phase
+![Testing Phase](https://github.com/user-attachments/assets/5b972789-c8ee-40bd-a8e2-c3a96ed65a52)
+### MLflow version tracking hosted on Dagshub
+![MLflow version tracking hosted on Dagshub](https://github.com/user-attachments/assets/3c0e0599-5d4e-4ec8-99ac-a6c216d71f28)
+### AWS Integration
+![AWS Integration](https://github.com/user-attachments/assets/282e41ff-8fc5-4c7d-9e40-a832fc1ccce9)
+## Automation with GitHub Actions
+![Automation with GitHub Actions](https://github.com/user-attachments/assets/4b554a7b-6432-4867-a7f0-bef5939a75c7)
+
+
+
+
+
+
