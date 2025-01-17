@@ -3,9 +3,10 @@
 ## Table of Contents
 1. [Motivation](#motivation)
 2. [Project Description](#project-description)
-3. [Pipeline Stages](#pipeline-stages)
-4. [Tech Stack](#tech-stack)
-5. [Screenshots](#screenshots)
+3. [Video Walkthrough](#video-walkthrough-of-the-project)
+4. [Pipeline Stages](#pipeline-stages)
+5. [Tech Stack](#tech-stack)
+6. [Screenshots](#screenshots)
 ---
 ## Motivation
 With the increasing prevalence of cyber frauds and threats, user privacy has become more essential than ever. Hackers often attempt to gain sensitive information through phishing attacks. This project aims to protect users from such threats by identifying phishing websites. It can easily be integrated as a tool in larger applications or used for surveillance purposes by enterprises or individual users.
@@ -14,6 +15,9 @@ With the increasing prevalence of cyber frauds and threats, user privacy has bec
 This repository contains a machine learning pipeline for classifying network data as phishing or legitimate. The pipeline involves multiple stages, including data ingestion, data validation, data transformation, model training, and prediction. The project is built to handle large-scale network data and make real-time predictions.
 
 The project involves building and deploying a machine learning model to classify network data. The pipeline ensures automated data handling, model training, and prediction, all while maintaining version control and model management.
+
+## Video walkthrough of the project
+[LinkedIn](https://www.linkedin.com/posts/yash-gupta-0712b324b_machinelearning-cybersecurity-ai-activity-7285966626150080513-IH_i?utm_source=share&utm_medium=member_desktop)
 
 ## Pipeline Stages
 1. **Data Ingestion**: Extracts data MongoDB and loads it as pandas dataframe.
